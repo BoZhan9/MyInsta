@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
-from Insta.models import Post, Like
+from Insta.models import Post, Like, InstaUser
 from Insta.forms import CustomUserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from annoying.decorators import ajax_request
@@ -16,6 +16,10 @@ class PostsView(ListView):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post_detail.html' 
+
+class UserDetailView(DetailView):
+    model = InstaUser
+    template_name = 'user_detail.html'
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
