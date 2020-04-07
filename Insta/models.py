@@ -31,6 +31,9 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def get_like_count(self):
+        return self.likes.count()
+
     def get_absolute_url(self):
         return reverse("post_detail", args=[str(self.id)])
 
