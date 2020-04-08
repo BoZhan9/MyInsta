@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
-from Insta.models import Post, Like, InstaUser
+from Insta.models import Post, Like, InstaUser, UserConnection
 from Insta.forms import CustomUserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from annoying.decorators import ajax_request
@@ -12,6 +12,17 @@ class HelloWorld(TemplateView):
 class PostsView(ListView):
     model = Post
     template_name = 'index.html'
+    login_url = 'login'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return     
+
+        current_user = self.request.user
+        following = set()
+        for conn in UserConnection.objects.filter(creator=current_user).select_related('following'):
+            following.add(conn.following)
+        return Post.objects.filter(author__in=following)  
 
 class PostDetailView(DetailView):
     model = Post
